@@ -1,5 +1,7 @@
 Lilith Architecture
 
+![Lilith Architecture](images/architecture_diagram.png)
+
 This repository contains the public architecture and research notes behind my first large-scale software engineering project.
 
 What started as a small football modelling experiment slowly evolved into a replayable event-driven decision system with:
