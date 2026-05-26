@@ -1,8 +1,8 @@
-Lilith Architecture
+# Lilith Architecture
 
-"Lilith Architecture" (images/architecture_diagram.png)
+![Lilith Architecture](images/architecture_diagram.png)
 
-Overview
+## Overview
 
 Lilith is a replayable, event-driven decision system built primarily as a learning and validation project.
 
@@ -20,7 +20,6 @@ What started as a small football modelling experiment slowly evolved into a larg
 This repository contains the public-safe architecture and research notes behind the project.
 
 The goal is not to expose a “winning model,” but to document:
-
 - engineering structure
 - replay methodology
 - validation philosophy
@@ -32,17 +31,17 @@ Most production logic, thresholds, deployment configurations, calibrated artifac
 
 ---
 
-Contents
+## Contents
 
-- "Why I Built This" (#why-i-built-this)
-- "Current Focus" (#current-focus)
-- "Replay Infrastructure" (#replay-infrastructure)
-- "Repository Scope" (#repository-scope)
-- "Documentation" (#documentation)
+- [Why I Built This](#why-i-built-this)
+- [Current Focus](#current-focus)
+- [Replay Infrastructure](#replay-infrastructure)
+- [Repository Scope](#repository-scope)
+- [Documentation](#documentation)
 
 ---
 
-Why I Built This
+## Why I Built This
 
 This is my first serious software engineering project.
 
@@ -60,7 +59,6 @@ I started with very limited programming experience and used the project as a way
 Over time, the project became much larger than originally expected and evolved into a multi-stage experimental platform.
 
 Because this is my first large-scale project, the repository also reflects the learning process itself:
-
 - mistakes
 - refactors
 - architectural redesigns
@@ -69,7 +67,7 @@ Because this is my first large-scale project, the repository also reflects the l
 
 ---
 
-Current Focus
+## Current Focus
 
 The current research focus is centered around:
 
@@ -84,40 +82,39 @@ The current research focus is centered around:
 
 ---
 
-Replay Infrastructure
+## Replay Infrastructure
 
 The project is built around replayable “as-if-live” execution cycles.
 
 Replay runs are designed to:
-
 - enforce temporal correctness
 - prevent future-data leakage
 - emit deterministic audit artifacts
 - validate governance and fail-closed constraints
 
-Example Replay Run
+### Example Replay Run
 
-"Replay Example" (images/replay_example.png)
+![Replay Example](images/replay_example.png)
 
-Validation & Anti-Leakage Checks
+### Validation & Anti-Leakage Checks
 
-"Validation Checks" (images/validation_checks.png)
+![Validation Checks](images/validation_checks.png)
 
-Orchestration Flow
+### Orchestration Flow
 
-"Orchestration Run" (images/orchestration_run.png)
+![Orchestration Run](images/orchestration_run.png)
 
-Audit Artifact Structure
+### Audit Artifact Structure
 
-"Audit Flow" (images/audit_flow.png)
+![Audit Flow](images/audit_flow.png)
 
-Workspace Structure (Public-Safe)
+### Workspace Structure (Public-Safe)
 
-"Folder Structure" (images/folder_structure.png)
+![Folder Structure](images/folder_structure.png)
 
 ---
 
-Repository Scope
+## Repository Scope
 
 This public repository mainly contains:
 
@@ -132,19 +129,19 @@ The private production environment remains intentionally separated.
 
 ---
 
-Documentation
+## Documentation
 
-Additional technical notes are available in the "/docs" folder:
+Additional technical notes are available in the `/docs` folder:
 
-- "architecture.md"
-- "replay_engine.md"
-- "governance.md"
-- "anti_leakage.md"
-- "calibration.md"
+- `architecture.md`
+- `replay_engine.md`
+- `governance.md`
+- `anti_leakage.md`
+- `calibration.md`
 
 ---
 
-Public-Safe Philosophy
+## Public-Safe Philosophy
 
 This repository intentionally avoids exposing:
 
