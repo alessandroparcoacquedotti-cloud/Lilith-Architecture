@@ -154,3 +154,9 @@ This repository intentionally avoids exposing:
 - calibrated production artifacts
 
 The focus of this repository is software engineering, validation, replayability, governance, and auditability.
+
+---
+
+## Project Status
+
+This project is currently under active development and continuous architectural iteration.
