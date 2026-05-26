@@ -36,8 +36,10 @@ Most production logic, thresholds, deployment configurations, calibrated artifac
 - [Why I Built This](#why-i-built-this)
 - [Current Focus](#current-focus)
 - [Replay Infrastructure](#replay-infrastructure)
+- [Public Utilities](#public-utilities)
 - [Repository Scope](#repository-scope)
 - [Documentation](#documentation)
+- [Public-Safe Philosophy](#public-safe-philosophy)
 
 ---
 
@@ -111,6 +113,43 @@ Replay runs are designed to:
 ### Workspace Structure (Public-Safe)
 
 ![Folder Structure](images/folder_structure.png)
+
+---
+
+## Public Utilities
+
+The repository also includes small public-safe utilities focused on replayability, validation, and governance concepts.
+
+### Replay Manifest Validator
+
+Location:
+
+`scripts_public/replay_manifest_validator.py`
+
+Purpose:
+- validate replay manifests
+- enforce schema consistency
+- validate replay timestamps
+- support deterministic replay workflows
+- demonstrate audit-oriented validation patterns
+
+Example usage:
+
+`python scripts_public/replay_manifest_validator.py path/to/replay_manifest.json`
+
+Example stdin usage:
+
+`Get-Content path/to/replay_manifest.json | python scripts_public/replay_manifest_validator.py -`
+
+### Example Replay Manifest
+
+`{
+  "run_id": "2026_05_26_REPLAY",
+  "replay_timestamp": "2026-05-26T10:00:00Z",
+  "fixtures_processed": 142,
+  "audit_schema_version": "v1",
+  "integrity_hash": "abc123"
+}`
 
 ---
 
