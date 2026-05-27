@@ -2,6 +2,8 @@
 
 ![Lilith Architecture](images/architecture_diagram.png)
 
+---
+
 ## Overview
 
 The core design principle of Lilith is simple:
@@ -27,6 +29,7 @@ What started as a small football modelling experiment slowly evolved into a larg
 This repository contains the public-safe architecture and research notes behind the project.
 
 The goal is not to expose a “winning model,” but to document:
+
 - engineering structure
 - replay methodology
 - validation philosophy
@@ -45,6 +48,7 @@ Most production logic, thresholds, deployment configurations, calibrated artifac
 - [Engineering Priorities](#engineering-priorities)
 - [Replay Infrastructure](#replay-infrastructure)
 - [Replay Determinism](#replay-determinism)
+- [Replay Artifact Lineage](#replay-artifact-lineage)
 - [Public Utilities](#public-utilities)
 - [Repository Structure](#repository-structure)
 - [Documentation](#documentation)
@@ -71,6 +75,7 @@ I started with very limited programming experience and used the project as a way
 Over time, the project became much larger than originally expected and evolved into a multi-stage experimental platform.
 
 Because this is my first large-scale project, the repository also reflects the learning process itself:
+
 - mistakes
 - refactors
 - architectural redesigns
@@ -113,6 +118,7 @@ The goal is not maximum complexity, but controlled and explainable system behavi
 The project is built around replayable “as-if-live” execution cycles.
 
 Replay runs are designed to:
+
 - enforce temporal correctness
 - prevent future-data leakage
 - emit deterministic audit artifacts
@@ -123,6 +129,7 @@ Replay runs are designed to:
 Additional deep-dive technical notes:
 
 - [`docs/replay_determinism.md`](docs/replay_determinism.md)
+- [`docs/replay_artifact_lineage.md`](docs/replay_artifact_lineage.md)
 
 ### Example Replay Run
 
@@ -166,6 +173,7 @@ One of the central design assumptions is:
 > future information is an adversary and non-determinism is an integrity failure.
 
 The replay design note intentionally focuses on:
+
 - failure modes
 - invariant enforcement
 - auditability
@@ -173,6 +181,46 @@ The replay design note intentionally focuses on:
 - engineering trade-offs
 
 rather than prediction quality or profitability claims.
+
+---
+
+## Replay Artifact Lineage
+
+The replay lineage subsystem documents how replay artifacts move through deterministic execution boundaries.
+
+The design note in `docs/replay_artifact_lineage.md` defines:
+
+- artifact classes
+- immutable replay boundaries
+- validation checkpoints
+- deterministic write guarantees
+- replay provenance contracts
+- audit lineage semantics
+- fail-closed replay integrity boundaries
+
+### Replay Lineage Diagram
+
+![Replay Lineage Diagram](images/replay_lineage_diagram.png)
+
+The lineage architecture separates:
+
+- decision-time artifacts
+- replay manifests
+- evidence layers
+- audit artifacts
+- post-event settlement artifacts
+
+while preserving deterministic replay guarantees and temporal isolation constraints.
+
+The lineage design intentionally focuses on:
+
+- replay correctness
+- deterministic boundaries
+- immutable artifacts
+- validation checkpoints
+- audit-oriented reproducibility
+
+rather than model outputs or operational strategies.
 
 ---
 
@@ -187,6 +235,7 @@ Location:
 `scripts_public/replay_manifest_validator.py`
 
 Purpose:
+
 - validate replay manifests
 - enforce schema consistency
 - validate replay timestamps
@@ -233,7 +282,7 @@ README.md
   Technical architecture and governance notes
 
 - `/images`
-  Replay, orchestration and validation screenshots
+  Replay, orchestration and validation screenshots and diagrams
 
 - `/examples`
   Public-safe replay and audit examples
@@ -250,6 +299,7 @@ Additional technical notes are available in the `/docs` folder:
 - `architecture.md`
 - `replay_engine.md`
 - `replay_determinism.md`
+- `replay_artifact_lineage.md`
 - `governance.md`
 - `anti_leakage.md`
 - `calibration.md`
