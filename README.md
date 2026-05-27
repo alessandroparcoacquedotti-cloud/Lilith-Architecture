@@ -266,6 +266,43 @@ Minimal public-safe replay manifest example used for deterministic replay valida
 
 ---
 
+### Deterministic Artifact Diff
+
+Location:
+
+`/scripts_public/deterministic_artifact_diff.py`
+
+Purpose:
+- deterministic artifact comparison
+- schema drift detection
+- replay reproducibility auditing
+- stable normalization and hashing
+- public-safe diff inspection
+
+Supported artifact types:
+- CSV
+- JSON
+
+Core capabilities:
+- deterministic row hashing
+- stable schema hashing
+- timestamp normalization
+- whitespace normalization
+- ordering-independent comparison
+- public-safe diff summaries
+- schema drift detection
+- primary-key aware comparisons
+
+Additional documentation:
+
+- [`docs/deterministic_diff.md`](docs/deterministic_diff.md)
+
+Example screenshot:
+
+![Deterministic Diff Example](images/deterministic_diff_example.png)
+
+---
+
 ## Repository Structure
 
 ```text
