@@ -44,6 +44,7 @@ Most production logic, thresholds, deployment configurations, calibrated artifac
 - [Current Focus](#current-focus)
 - [Engineering Priorities](#engineering-priorities)
 - [Replay Infrastructure](#replay-infrastructure)
+- [Replay Determinism](#replay-determinism)
 - [Public Utilities](#public-utilities)
 - [Repository Structure](#repository-structure)
 - [Documentation](#documentation)
@@ -119,6 +120,10 @@ Replay runs are designed to:
 - preserve replay reproducibility
 - support audit-oriented debugging workflows
 
+Additional deep-dive technical notes:
+
+- [`docs/replay_determinism.md`](docs/replay_determinism.md)
+
 ### Example Replay Run
 
 ![Replay Example](images/replay_example.png)
@@ -138,6 +143,36 @@ Replay runs are designed to:
 ### Workspace Structure (Public-Safe)
 
 ![Folder Structure](images/folder_structure.png)
+
+---
+
+## Replay Determinism
+
+The replay subsystem is designed around deterministic “as-if-live” execution guarantees.
+
+The design note in `docs/replay_determinism.md` documents:
+
+- replay invariants
+- immutable replay timestamps
+- deterministic execution boundaries
+- fail-closed replay validation
+- temporal isolation guarantees
+- replay reproducibility vs audit reproducibility
+- replay abort mechanics
+- artifact lineage philosophy
+
+One of the central design assumptions is:
+
+> future information is an adversary and non-determinism is an integrity failure.
+
+The replay design note intentionally focuses on:
+- failure modes
+- invariant enforcement
+- auditability
+- replay correctness
+- engineering trade-offs
+
+rather than prediction quality or profitability claims.
 
 ---
 
@@ -170,6 +205,7 @@ Example stdin usage:
 
 Minimal public-safe replay manifest example used for deterministic replay validation:
 
+```json
 {
   "run_id": "2026_05_26_REPLAY",
   "replay_timestamp": "2026-05-26T10:00:00Z",
@@ -177,6 +213,7 @@ Minimal public-safe replay manifest example used for deterministic replay valida
   "audit_schema_version": "v1",
   "integrity_hash": "abc123"
 }
+```
 
 ---
 
@@ -212,6 +249,7 @@ Additional technical notes are available in the `/docs` folder:
 
 - `architecture.md`
 - `replay_engine.md`
+- `replay_determinism.md`
 - `governance.md`
 - `anti_leakage.md`
 - `calibration.md`
