@@ -4,11 +4,18 @@
 
 ## Overview
 
+The core design principle of Lilith is simple:
+
+> a historical replay should behave exactly as if the system were operating live at that point in time — without access to future information, hidden corrections or post-event state.
+
+Lilith treats replayability, auditability and temporal correctness as first-class engineering constraints rather than secondary validation steps.
+
 Lilith is a replayable, event-driven decision system built primarily as a learning and validation project.
 
 What started as a small football modelling experiment slowly evolved into a larger software engineering and governance-oriented platform focused on:
 
 - replay infrastructure
+- deterministic execution
 - time-safe validation
 - calibration pipelines
 - governance layers
@@ -27,7 +34,7 @@ The goal is not to expose a “winning model,” but to document:
 - architectural trade-offs
 - lessons learned while building the system
 
-Most production logic, thresholds, deployment configurations, calibrated artifacts, and private datasets are intentionally excluded.
+Most production logic, thresholds, deployment configurations, calibrated artifacts and private datasets are intentionally excluded.
 
 ---
 
@@ -35,11 +42,13 @@ Most production logic, thresholds, deployment configurations, calibrated artifac
 
 - [Why I Built This](#why-i-built-this)
 - [Current Focus](#current-focus)
+- [Engineering Priorities](#engineering-priorities)
 - [Replay Infrastructure](#replay-infrastructure)
 - [Public Utilities](#public-utilities)
-- [Repository Scope](#repository-scope)
+- [Repository Structure](#repository-structure)
 - [Documentation](#documentation)
 - [Public-Safe Philosophy](#public-safe-philosophy)
+- [Project Status](#project-status)
 
 ---
 
@@ -84,6 +93,20 @@ The current research focus is centered around:
 
 ---
 
+## Engineering Priorities
+
+The project currently prioritizes:
+
+1. Temporal correctness over convenience
+2. Replayability over opaque execution
+3. Auditability over minimal output
+4. Fail-closed behavior over silent degradation
+5. Deterministic validation over optimistic assumptions
+
+The goal is not maximum complexity, but controlled and explainable system behavior.
+
+---
+
 ## Replay Infrastructure
 
 The project is built around replayable “as-if-live” execution cycles.
@@ -93,6 +116,8 @@ Replay runs are designed to:
 - prevent future-data leakage
 - emit deterministic audit artifacts
 - validate governance and fail-closed constraints
+- preserve replay reproducibility
+- support audit-oriented debugging workflows
 
 ### Example Replay Run
 
@@ -118,7 +143,7 @@ Replay runs are designed to:
 
 ## Public Utilities
 
-The repository also includes small public-safe utilities focused on replayability, validation, and governance concepts.
+The repository also includes small public-safe utilities focused on replayability, validation and governance concepts.
 
 ### Replay Manifest Validator
 
@@ -143,28 +168,41 @@ Example stdin usage:
 
 ### Example Replay Manifest
 
-`{
+Minimal public-safe replay manifest example used for deterministic replay validation:
+
+{
   "run_id": "2026_05_26_REPLAY",
   "replay_timestamp": "2026-05-26T10:00:00Z",
   "fixtures_processed": 142,
   "audit_schema_version": "v1",
   "integrity_hash": "abc123"
-}`
+}
 
 ---
 
-## Repository Scope
+## Repository Structure
 
-This public repository mainly contains:
+```text
+README.md
+/docs
+/images
+/examples
+/scripts_public
+```
 
-- architecture notes
-- governance concepts
-- replay methodology
-- validation philosophy
-- simplified examples
-- documentation and experiments
+### Main Areas
 
-The private production environment remains intentionally separated.
+- `/docs`
+  Technical architecture and governance notes
+
+- `/images`
+  Replay, orchestration and validation screenshots
+
+- `/examples`
+  Public-safe replay and audit examples
+
+- `/scripts_public`
+  Lightweight public-safe validation utilities
 
 ---
 
@@ -192,7 +230,7 @@ This repository intentionally avoids exposing:
 - operational endpoints
 - calibrated production artifacts
 
-The focus of this repository is software engineering, validation, replayability, governance, and auditability.
+The focus of this repository is software engineering, validation, replayability, governance and auditability.
 
 ---
 
