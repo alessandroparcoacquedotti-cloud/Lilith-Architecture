@@ -145,6 +145,41 @@ Disable normalization options (useful for diagnosing noise sources):
 python scripts_public/deterministic_artifact_diff.py --left artifact_a.csv --right artifact_b.csv --no-collapse-whitespace --no-normalize-timestamps
 ```
 
+## Deterministic Guarantees
+
+Given identical normalized inputs, the utility guarantees:
+
+- deterministic row hashing
+- deterministic schema hashing
+- stable ordering-independent comparison
+- reproducible audit summaries
+- replay-safe diff reproducibility
+
+The utility intentionally avoids:
+- probabilistic comparisons
+- fuzzy matching
+- heuristic row reconciliation
+- non-deterministic output ordering
+
+A diff that changes between runs without behavioral changes is treated as an integrity failure.
+
+---
+
+## Limitations
+
+The utility is intentionally conservative.
+
+It does not:
+- infer semantic equivalence
+- resolve fuzzy identity mappings
+- reconcile structurally incompatible schemas
+- perform domain-aware comparisons
+- preserve ordering semantics unless explicitly configured
+
+Schema ambiguity is treated as a validation problem rather than a recoverable warning.
+
+---
+
 ## Notes on Public-Safe Output
 
 By default, the utility avoids printing raw row values to reduce the risk of leaking private identifiers.
