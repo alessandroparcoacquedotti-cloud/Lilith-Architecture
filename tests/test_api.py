@@ -34,10 +34,11 @@ def test_health_db_skips_when_not_configured(monkeypatch) -> None:
     resp = client.get("/health/db")
     assert resp.status_code == 200
     body = resp.json()
-    assert body["ok"] is False
-    assert body["configured"] is False
-    assert body["status"] == "SKIP"
-    assert body["error"] == "db_not_configured"
+    assert body["database"] == "FAIL"
+    assert body["migration_status"] == "UNKNOWN"
+    assert body["database_revision"] is None
+    assert body["repository_head_revision"] is None
+    assert body["request_id"]
 
 
 def test_manifest_validation_ok() -> None:

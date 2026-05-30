@@ -12,9 +12,11 @@ ENV PATH="/opt/venv/bin:${PATH}"
 COPY pyproject.toml /app/pyproject.toml
 COPY README.md /app/README.md
 COPY src /app/src
+COPY alembic.ini /app/alembic.ini
+COPY alembic /app/alembic
 
-ARG INSTALL_EXTRAS="api"
-RUN --mount=type=cache,target=/root/.cache/pip \
+ARG INSTALL_EXTRAS="db,api"
+RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
     python -m pip install --upgrade pip && \
     if [ -n "$INSTALL_EXTRAS" ]; then python -m pip install ".[${INSTALL_EXTRAS}]"; else python -m pip install .; fi
 
@@ -31,8 +33,11 @@ COPY --from=builder /opt/venv /opt/venv
 
 WORKDIR /app
 
+COPY alembic.ini /app/alembic.ini
+COPY alembic /app/alembic
+
 USER app
 
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import json,urllib.request; print(json.loads(urllib.request.urlopen('http://localhost:8000/health', timeout=2).read().decode('utf-8'))['ok'])"
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import json,os,urllib.request; port=os.environ.get('PORT') or os.environ.get('API_PORT') or '8000'; url=f'http://localhost:{port}/health'; print(json.loads(urllib.request.urlopen(url, timeout=2).read().decode('utf-8'))['ok'])"
 
-CMD ["sh", "-c", "uvicorn lilith_replay_core.api.app:app --host ${API_HOST:-0.0.0.0} --port ${API_PORT:-8000} --proxy-headers --forwarded-allow-ips='*' --no-access-log"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn lilith_replay_core.api.app:app --host ${API_HOST:-0.0.0.0} --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*' --no-access-log"]

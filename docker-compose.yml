@@ -20,7 +20,7 @@ services:
       [
         "sh",
         "-c",
-        "uvicorn lilith_replay_core.api.app:app --host ${API_HOST:-0.0.0.0} --port ${API_PORT:-8000} --proxy-headers --forwarded-allow-ips='*' --no-access-log",
+        "alembic upgrade head && uvicorn lilith_replay_core.api.app:app --host ${API_HOST:-0.0.0.0} --port ${API_PORT:-8000} --proxy-headers --forwarded-allow-ips='*' --no-access-log",
       ]
     healthcheck:
       test:
