@@ -1,5 +1,7 @@
 # Lilith Architecture
 
+[![CI](https://github.com/alessandroparcoacquedotti-cloud/Lilith-Architecture/actions/workflows/ci.yml/badge.svg)](https://github.com/alessandroparcoacquedotti-cloud/Lilith-Architecture/actions/workflows/ci.yml)
+
 ![Lilith Architecture](images/architecture_diagram.png)
 
 ---
@@ -286,12 +288,9 @@ Supported artifact types:
 Core capabilities:
 - deterministic row hashing
 - stable schema hashing
-- timestamp normalization
-- whitespace normalization
 - ordering-independent comparison
-- public-safe diff summaries
 - schema drift detection
-- primary-key aware comparisons
+- public-safe summary output (hash-based)
 
 Additional documentation:
 
@@ -300,6 +299,51 @@ Additional documentation:
 Example screenshot:
 
 ![Deterministic Diff Example](images/deterministic_diff_example.png)
+
+---
+
+## Public Replay Platform Implementation
+
+This repository includes a public-safe reference implementation of the replay platform as a Python package and FastAPI service.
+
+Package path:
+
+`src/lilith_replay_core`
+
+API startup (local):
+
+```bash
+uvicorn lilith_replay_core.api.app:app --host 0.0.0.0 --port 8000
+```
+
+Docker quickstart:
+
+```bash
+docker build -t lilith-replay .
+docker run --rm -p 8000:8000 -e APP_ENV=production -e LOG_LEVEL=INFO lilith-replay
+```
+
+Key endpoints:
+
+- `GET /health`
+- `GET /docs`
+- `GET /metrics` (when `ENABLE_METRICS=1`)
+- `POST /api/v1/manifests/validate`
+- `POST /api/v1/diff/json`
+- `POST /api/v1/diff/csv`
+
+CI / testing:
+
+- GitHub Actions workflow: `.github/workflows/ci.yml`
+- Local checks: `ruff check src tests scripts_public`, `mypy src`, `pytest`
+
+Public-safe boundaries:
+
+- No prediction logic
+- No betting logic
+- No private datasets
+- No secrets or credential-bearing configuration
+- No operational thresholds or production selection rules
 
 ---
 
