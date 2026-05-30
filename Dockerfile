@@ -16,8 +16,7 @@ COPY alembic.ini /app/alembic.ini
 COPY alembic /app/alembic
 
 ARG INSTALL_EXTRAS="db,api"
-RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
-    python -m pip install --upgrade pip && \
+RUN python -m pip install --upgrade pip && \
     if [ -n "$INSTALL_EXTRAS" ]; then python -m pip install ".[${INSTALL_EXTRAS}]"; else python -m pip install .; fi
 
 FROM python:3.12-slim AS runtime
