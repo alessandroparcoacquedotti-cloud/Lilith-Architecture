@@ -13,7 +13,7 @@ Major milestones:
 - Public health endpoints: `/health` and `/health/db` (DB check is safe/fail-closed and does not leak secrets)
 - Developer workflow: Ruff, Mypy, Pytest, CI, Dockerfile, Docker Compose, Railway/Render config
 
-## v0.2.0 (planned)
+## v0.2.0 (released)
 
 Major milestones:
 
@@ -22,3 +22,9 @@ Major milestones:
 - Prometheus: expanded, stable metric surface for replay and lineage workflows
 - Grafana: published dashboard export (JSON) and a minimal “how to import” operator note
 
+## v0.3.0 (planned)
+
+Major milestones:
+
+- Tighten release automation (tagging + GitHub Releases) and keep docs in sync with shipped behavior
+- Improve demo verification flows and reduce ambiguity around live base URLs

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lilith-replay-core"
-version = "0.1.0"
+version = "0.2.0"
 description = "Public-safe deterministic replay/audit core scaffolding for validation engineering and governance."
 requires-python = ">=3.11"
 dependencies = ["pydantic>=2.0,<3.0"]
