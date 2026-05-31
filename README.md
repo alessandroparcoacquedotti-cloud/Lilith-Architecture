@@ -341,6 +341,15 @@ Persistence + lineage (database-backed):
 - `GET /api/v1/replay/run/{run_id}` returns stored `ReplayRun` metadata.
 - `GET /api/v1/lineage/{run_id}` reads the persisted `ReplayRun` + `ArtifactRecord` rows and returns the lineage view.
 
+Prometheus metrics:
+
+- `GET /metrics` exposes:
+  - `api_requests_total{method,path,status}` and `api_request_duration_seconds{method,path,status}`
+  - `replay_runs_created_total{replay_type,status}`
+  - `artifact_records_created_total{artifact_type}`
+  - `lineage_requests_total{status}`
+  - `db_transactions_total{operation,result}` and `db_operation_duration_seconds{operation}`
+
 CI / testing:
 
 - GitHub Actions workflow: `.github/workflows/ci.yml`

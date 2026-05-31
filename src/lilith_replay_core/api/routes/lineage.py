@@ -6,6 +6,7 @@ from pydantic import UUID4, BaseModel, Field
 from lilith_replay_core.db.runtime import get_sessionmaker, resolve_database_url
 from lilith_replay_core.lineage import LineageRecord
 from lilith_replay_core.logging import get_logger, set_replay_run_id
+from lilith_replay_core.observability import LINEAGE_REQUESTS_TOTAL, counter_inc
 from lilith_replay_core.persistence import get_lineage
 
 router = APIRouter(prefix="/lineage", tags=["lineage"])
@@ -23,9 +24,17 @@ def get_lineage_route(run_id: UUID4) -> LineageResponse:
     logger.info("lineage request", extra={"event": "lineage.request", "data": {"replay_run_id": str(run_id)}})
 
     sessionmaker_ = get_sessionmaker(resolve_database_url())
-    data = get_lineage(sessionmaker_, run_id=run_id)
-    if data is None:
-        raise HTTPException(status_code=404, detail="lineage_not_found")
+    try:
+        data = get_lineage(sessionmaker_, run_id=run_id)
+        if data is None:
+            counter_inc(LINEAGE_REQUESTS_TOTAL, status="not_found")
+            raise HTTPException(status_code=404, detail="lineage_not_found")
+        counter_inc(LINEAGE_REQUESTS_TOTAL, status="success")
+    except HTTPException:
+        raise
+    except Exception:
+        counter_inc(LINEAGE_REQUESTS_TOTAL, status="error")
+        raise
 
     record = LineageRecord.model_validate(
         {

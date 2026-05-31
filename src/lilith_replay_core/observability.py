@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from types import ModuleType
-from typing import Any
+from typing import Protocol, Self
 
 _prom_module: ModuleType | None
 try:
@@ -12,19 +12,29 @@ except Exception:  # pragma: no cover
 _prom: ModuleType | None = _prom_module
 
 
-def counter_inc(counter: Any, **labels: str) -> None:
+class CounterLike(Protocol):
+    def labels(self, **labels: str) -> Self: ...
+    def inc(self, amount: float = 1.0) -> None: ...
+
+
+class HistogramLike(Protocol):
+    def labels(self, **labels: str) -> Self: ...
+    def observe(self, amount: float) -> None: ...
+
+
+def counter_inc(counter: CounterLike | None, **labels: str) -> None:
     if counter is None:
         return
     counter.labels(**labels).inc()
 
 
-def counter_inc_unlabeled(counter: Any) -> None:
+def counter_inc_unlabeled(counter: CounterLike | None) -> None:
     if counter is None:
         return
     counter.inc()
 
 
-def hist_observe(hist: Any, value: float, **labels: str) -> None:
+def hist_observe(hist: HistogramLike | None, value: float, **labels: str) -> None:
     if hist is None:
         return
     hist.labels(**labels).observe(value)
@@ -109,3 +119,53 @@ DB_CONNECTIVITY_CHECKS_TOTAL = (
     else None
 )
 
+REPLAY_RUNS_CREATED_TOTAL = (
+    _prom.Counter(
+        "replay_runs_created_total",
+        "Total replay runs created (committed).",
+        labelnames=("replay_type", "status"),
+    )
+    if _prom is not None
+    else None
+)
+
+ARTIFACT_RECORDS_CREATED_TOTAL = (
+    _prom.Counter(
+        "artifact_records_created_total",
+        "Total artifact records persisted (committed).",
+        labelnames=("artifact_type",),
+    )
+    if _prom is not None
+    else None
+)
+
+LINEAGE_REQUESTS_TOTAL = (
+    _prom.Counter(
+        "lineage_requests_total",
+        "Total lineage requests.",
+        labelnames=("status",),
+    )
+    if _prom is not None
+    else None
+)
+
+DB_TRANSACTIONS_TOTAL = (
+    _prom.Counter(
+        "db_transactions_total",
+        "Total database operations executed by the service.",
+        labelnames=("operation", "result"),
+    )
+    if _prom is not None
+    else None
+)
+
+DB_OPERATION_DURATION_SECONDS = (
+    _prom.Histogram(
+        "db_operation_duration_seconds",
+        "Database operation latency in seconds.",
+        labelnames=("operation",),
+        buckets=(0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5),
+    )
+    if _prom is not None
+    else None
+)
