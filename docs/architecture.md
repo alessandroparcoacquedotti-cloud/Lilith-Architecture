@@ -117,6 +117,16 @@ Lilith emphasizes auditability over minimalism:
 
 The goal is to be able to answer: “What did the system know at the time, and why did it act?”
 
+## Persistence Layer (Public Platform)
+
+The public platform includes a minimal persistence workflow to demonstrate real database usage without exposing private datasets or operational logic.
+
+Architecture:
+
+- `ReplayRun` is the durable run root. It stores a generated `run_id` (UUID) plus public-safe metadata (`replay_type`, `status`, `manifest_hash`, `request_id`, timestamps).
+- `ArtifactRecord` rows attach to a `ReplayRun` via `run_id` and store immutable artifact identifiers (`artifact_type`, `artifact_hash`, timestamps).
+- `Lineage` is derived from persisted rows: `ReplayRun → ArtifactRecord[]`. The lineage API reads the database rather than returning stub data.
+
 ## Diagram
 
 The architecture diagram is a placeholder in this public-safe structure:

@@ -1,11 +1,27 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+import uuid
+from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class LineageArtifact(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    artifact_id: int
+    artifact_type: str
+    artifact_hash: str
+    created_at: datetime
 
 
 class LineageRecord(BaseModel):
-    run_id: str
-    created_at: datetime = Field(default_factory=lambda: datetime(1970, 1, 1, tzinfo=UTC))
-    parents: list[str] = Field(default_factory=list)
+    model_config = ConfigDict(from_attributes=True)
+
+    run_id: uuid.UUID
+    created_at: datetime
+    replay_type: str
+    status: str
+    manifest_hash: str
+    request_id: str
+    artifacts: list[LineageArtifact] = Field(default_factory=list)

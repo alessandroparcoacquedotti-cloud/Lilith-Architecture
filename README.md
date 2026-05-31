@@ -331,6 +331,15 @@ Key endpoints:
 - `POST /api/v1/manifests/validate`
 - `POST /api/v1/diff/json`
 - `POST /api/v1/diff/csv`
+- `POST /api/v1/replay/run`
+- `GET /api/v1/replay/run/{run_id}`
+- `GET /api/v1/lineage/{run_id}`
+
+Persistence + lineage (database-backed):
+
+- `POST /api/v1/replay/run` creates a `ReplayRun` and related `ArtifactRecord` rows in a single transaction and returns `run_id`.
+- `GET /api/v1/replay/run/{run_id}` returns stored `ReplayRun` metadata.
+- `GET /api/v1/lineage/{run_id}` reads the persisted `ReplayRun` + `ArtifactRecord` rows and returns the lineage view.
 
 CI / testing:
 

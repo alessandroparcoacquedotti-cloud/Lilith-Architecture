@@ -10,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from lilith_replay_core import __version__
-from lilith_replay_core.api.routes import diffing, health, lineage, manifests
+from lilith_replay_core.api.routes import diffing, health, lineage, manifests, replay
 from lilith_replay_core.config import AppSettings, load_settings
 from lilith_replay_core.logging import (
     configure_logging,
@@ -167,6 +167,7 @@ def create_app(settings: AppSettings | None = None) -> FastAPI:
     router = APIRouter(prefix="/api/v1")
     router.include_router(manifests.router)
     router.include_router(diffing.router)
+    router.include_router(replay.router)
     router.include_router(lineage.router)
     app.include_router(router)
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+import uuid
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -31,30 +31,33 @@ def test_models_can_persist_and_query_sqlite(tmp_path) -> None:
     Base.metadata.create_all(engine)
 
     maker = create_sessionmaker(engine)
+    run_id = uuid.uuid4()
     with session_scope(maker) as session:
         run = ReplayRun(
-            run_id="run-1",
-            replay_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
-            status=ReplayRunStatus.PENDING,
-            fixtures_processed=3,
+            run_id=run_id,
+            replay_type="unit_test",
+            status=ReplayRunStatus.CREATED,
+            manifest_hash="manifest-hash",
+            request_id="req-1",
         )
         session.add(run)
         session.flush()
 
         artifact = ArtifactRecord(
-            run_id="run-1",
+            run_id=run_id,
             artifact_type="manifest",
-            artifact_path="examples/replay_manifest_valid.json",
-            integrity_hash="abc",
+            artifact_hash="abc",
         )
         session.add(artifact)
 
     with session_scope(maker) as session:
-        fetched = session.query(ReplayRun).filter_by(run_id="run-1").one()
-        assert fetched.fixtures_processed == 3
-        assert fetched.status == ReplayRunStatus.PENDING
+        fetched = session.query(ReplayRun).filter_by(run_id=run_id).one()
+        assert fetched.replay_type == "unit_test"
+        assert fetched.status == ReplayRunStatus.CREATED
+        assert fetched.manifest_hash == "manifest-hash"
+        assert fetched.request_id == "req-1"
 
-        artifacts = session.query(ArtifactRecord).filter_by(run_id="run-1").all()
+        artifacts = session.query(ArtifactRecord).filter_by(run_id=run_id).all()
         assert len(artifacts) == 1
         assert artifacts[0].artifact_type == "manifest"
 
@@ -65,30 +68,33 @@ def test_session_scope_rolls_back_on_error(tmp_path) -> None:
     Base.metadata.create_all(engine)
 
     maker = create_sessionmaker(engine)
+    run_id = uuid.uuid4()
     try:
         with session_scope(maker) as session:
             session.add(
                 ReplayRun(
-                    run_id="run-dup",
-                    replay_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
-                    status=ReplayRunStatus.PENDING,
-                    fixtures_processed=0,
+                    run_id=run_id,
+                    replay_type="unit_test",
+                    status=ReplayRunStatus.CREATED,
+                    manifest_hash="manifest-hash",
+                    request_id="req-1",
                 )
             )
         with session_scope(maker) as session:
             session.add(
                 ReplayRun(
-                    run_id="run-dup",
-                    replay_timestamp=datetime(2026, 1, 2, tzinfo=UTC),
-                    status=ReplayRunStatus.PENDING,
-                    fixtures_processed=0,
+                    run_id=run_id,
+                    replay_type="unit_test",
+                    status=ReplayRunStatus.CREATED,
+                    manifest_hash="manifest-hash",
+                    request_id="req-1",
                 )
             )
     except Exception:
         pass
 
     with session_scope(maker) as session:
-        runs = session.query(ReplayRun).filter_by(run_id="run-dup").all()
+        runs = session.query(ReplayRun).filter_by(run_id=run_id).all()
         assert len(runs) == 1
 
 

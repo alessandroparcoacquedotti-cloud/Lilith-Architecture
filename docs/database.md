@@ -23,12 +23,12 @@ Represents a single replay execution run.
 
 Fields:
 
-- `id`: surrogate primary key
-- `run_id`: stable public-safe identifier (unique)
-- `replay_timestamp`: timestamp that defines the replay boundary
+- `run_id`: stable public-safe identifier (UUID, primary key)
 - `created_at`: creation time
-- `status`: `PENDING | RUNNING | COMPLETE | FAILED`
-- `fixtures_processed`: count of processed fixtures/items
+- `replay_type`: caller-provided run category (public-safe string)
+- `status`: lifecycle status (`created | running | complete | failed`)
+- `manifest_hash`: deterministic manifest hash used as a root-of-trust identifier
+- `request_id`: request correlation identifier (from `X-Request-ID` / middleware)
 
 ### ArtifactRecord
 
@@ -36,17 +36,16 @@ Represents a persisted pointer to an audit/replay artifact produced by a run.
 
 Fields:
 
-- `id`: surrogate primary key
+- `artifact_id`: surrogate primary key
 - `run_id`: foreign key to `ReplayRun.run_id`
 - `artifact_type`: artifact category (public-safe string)
-- `artifact_path`: path or label for the artifact (public-safe; no private endpoints)
-- `integrity_hash`: deterministic integrity hash
+- `artifact_hash`: deterministic integrity hash
 - `created_at`: creation time
 
 Constraints and indexes:
 
-- `ReplayRun.run_id` is unique.
-- `ArtifactRecord` enforces uniqueness on `(run_id, artifact_type, artifact_path)`.
+- `ReplayRun.run_id` is a primary key.
+- `ArtifactRecord` enforces uniqueness on `(run_id, artifact_type, artifact_hash)`.
 - Indexes exist for run correlation and lookup fields.
 
 ## Local Setup (PostgreSQL)

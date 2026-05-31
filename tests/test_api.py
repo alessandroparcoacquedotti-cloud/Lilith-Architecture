@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import json
 import logging
+import uuid
 from datetime import UTC, datetime
 
 from fastapi.testclient import TestClient
 
 from lilith_replay_core.api.app import app, create_app
 from lilith_replay_core.config import AppSettings
+from lilith_replay_core.db.base import Base
+from lilith_replay_core.db.session import create_engine
 from lilith_replay_core.logging import JsonFormatter, set_replay_run_id, set_request_id
 
 
@@ -152,3 +155,73 @@ def test_structured_logging_emits_request_id() -> None:
     finally:
         set_request_id(None)
         set_replay_run_id(None)
+
+
+def test_replay_run_create_retrieve_and_lineage(tmp_path, monkeypatch) -> None:
+    db_path = tmp_path / "api.sqlite"
+    url = f"sqlite+pysqlite:///{db_path}"
+    monkeypatch.setenv("DATABASE_URL", url)
+
+    engine = create_engine(url)
+    Base.metadata.create_all(engine)
+
+    client = TestClient(app)
+    payload = {
+        "replay_type": "public_demo",
+        "manifest_hash": "manifest-hash-1",
+        "artifacts": [
+            {"artifact_type": "manifest", "artifact_hash": "abc"},
+            {"artifact_type": "audit", "artifact_hash": "def"},
+        ],
+    }
+    created = client.post("/api/v1/replay/run", json=payload)
+    assert created.status_code == 200
+    created_body = created.json()
+    run_id = created_body["run_id"]
+    assert created_body["status"] == "created"
+
+    fetched = client.get(f"/api/v1/replay/run/{run_id}")
+    assert fetched.status_code == 200
+    fetched_body = fetched.json()
+    assert fetched_body["run_id"] == run_id
+    assert fetched_body["replay_type"] == "public_demo"
+    assert fetched_body["manifest_hash"] == "manifest-hash-1"
+    assert fetched_body["request_id"]
+    assert fetched_body["status"] == "created"
+
+    lineage = client.get(f"/api/v1/lineage/{run_id}")
+    assert lineage.status_code == 200
+    lineage_body = lineage.json()
+    assert lineage_body["ok"] is True
+    assert lineage_body["record"]["run_id"] == run_id
+    assert lineage_body["record"]["manifest_hash"] == "manifest-hash-1"
+    assert len(lineage_body["record"]["artifacts"]) == 2
+
+
+def test_replay_run_transaction_rolls_back(tmp_path, monkeypatch) -> None:
+    db_path = tmp_path / "api.sqlite"
+    url = f"sqlite+pysqlite:///{db_path}"
+    monkeypatch.setenv("DATABASE_URL", url)
+
+    engine = create_engine(url)
+    Base.metadata.create_all(engine)
+
+    client = TestClient(app)
+    run_id = str(uuid.uuid4())
+    payload = {
+        "run_id": run_id,
+        "replay_type": "public_demo",
+        "manifest_hash": "manifest-hash-1",
+        "artifacts": [
+            {"artifact_type": "manifest", "artifact_hash": "dup"},
+            {"artifact_type": "manifest", "artifact_hash": "dup"},
+        ],
+    }
+    created = client.post("/api/v1/replay/run", json=payload)
+    assert created.status_code == 409
+
+    fetched = client.get(f"/api/v1/replay/run/{run_id}")
+    assert fetched.status_code == 404
+
+    lineage = client.get(f"/api/v1/lineage/{run_id}")
+    assert lineage.status_code == 404
