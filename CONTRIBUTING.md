@@ -10,7 +10,7 @@ Thanks for your interest in contributing. This repository is intentionally scope
 
 ## Development Setup
 
-Install (API + DB + dev tooling):
+### Python setup (API + DB + dev tooling)
 
 ```bash
 python -m venv .venv
@@ -19,12 +19,47 @@ python -m pip install -U pip
 python -m pip install -e ".[dev,db,api]"
 ```
 
-Run checks:
+Windows PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+& .\.venv\Scripts\python.exe -m pip install -U pip
+& .\.venv\Scripts\python.exe -m pip install -e ".[dev,db,api]"
+```
+
+### Run the API locally
+
+```bash
+uvicorn lilith_replay_core.api.app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Verify:
+
+- `http://localhost:8000/docs`
+- `http://localhost:8000/health`
+- `http://localhost:8000/metrics`
+
+### Run with Docker Compose (API + Postgres)
+
+```bash
+docker compose up --build
+```
+
+### Run checks
 
 ```bash
 ruff check src tests scripts_public
 mypy src
 pytest
+```
+
+Makefile shortcuts (optional):
+
+```bash
+make lint
+make typecheck
+make test
 ```
 
 ## Pull Request Checklist
