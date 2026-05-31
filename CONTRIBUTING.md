@@ -70,3 +70,7 @@ make test
 - Public-safe posture preserved (no secrets, no sensitive artifacts, no internal logic leakage)
 - Logs remain structured JSON and do not include request bodies or artifacts
 - Metrics avoid user-derived labels and high-cardinality dimensions
+
+## Security Reports
+
+For vulnerability reporting, follow [SECURITY.md](SECURITY.md).

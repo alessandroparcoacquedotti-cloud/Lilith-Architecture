@@ -12,6 +12,7 @@ What belongs here:
 - deployment and development guides
 - observability/metrics guidance
 - runbooks and repository navigation documents
+- portfolio UX docs (recruiter quick start, screenshots, system topology)
 
 What does not belong here:
 
@@ -75,4 +76,3 @@ What belongs here:
 What does not belong here:
 
 - production data, scraped data, or anything requiring redaction
-

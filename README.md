@@ -10,6 +10,7 @@ Public-safe FastAPI backend that exposes deterministic validation + artifact dif
 - [Overview](#overview)
 - [Live Verification](#live-verification)
 - [Quick Verification Walkthrough (2–3 minutes)](#quick-verification-walkthrough-23-minutes)
+- [Recruiter Quick Start](#recruiter-quick-start)
 - [Architecture](#architecture)
 - [Public Replay Platform](#public-replay-platform)
 - [API](#api)
@@ -35,14 +36,26 @@ This repository intentionally does not contain: prediction logic, betting logic,
 Base URL:
 
 - Local (Docker / uvicorn): `http://localhost:8000`
-- Deployed (Railway/Render): `https://<your-public-service-domain>`
+- Deployed (Railway): `https://<railway-public-domain>`
 
-Endpoints (exact paths):
+Endpoints (exact paths, public):
 
 - Swagger UI: `GET /docs`
+  - Purpose: verify the API is running and discoverable.
+  - Expected: Swagger UI HTML page loads.
+  - Engineering value: shows contract-first verification (OpenAPI) and a stable public surface.
 - Health: `GET /health`
-- Database health: `GET /health/db`
+  - Purpose: verify the process is up and imports succeed.
+  - Expected: HTTP 200 JSON with `ok=true`, plus `X-Request-ID` header.
+  - Engineering value: proves deploy readiness independent of database state.
+- DB Health: `GET /health/db`
+  - Purpose: verify DB connectivity + migration posture in a safe (non-leaky) way.
+  - Expected: HTTP 200 JSON indicating PASS/FAIL and migration status without exposing connection strings.
+  - Engineering value: proves migration-first and DB correctness signals required for platform operations.
 - Metrics: `GET /metrics`
+  - Purpose: verify Prometheus metrics are live and incrementing.
+  - Expected: HTTP 200 Prometheus text format containing `api_requests_total`, `api_request_duration_seconds`, and replay/lineage/DB metrics.
+  - Engineering value: proves observability readiness (scrapeable metrics, low-cardinality labels).
 
 Exact URLs (local example):
 
@@ -50,6 +63,11 @@ Exact URLs (local example):
 - Health: `http://localhost:8000/health`
 - DB health: `http://localhost:8000/health/db`
 - Metrics: `http://localhost:8000/metrics`
+
+If you are reviewing the live deployment:
+
+- Replace `https://<railway-public-domain>` with the service’s public Railway URL.
+- Use the same paths (`/docs`, `/health`, `/health/db`, `/metrics`) on that base URL.
 
 ## Quick Verification Walkthrough (2–3 minutes)
 
@@ -90,6 +108,10 @@ Step 4: Verify metrics
   - `replay_validation_requests_total`
   - `deterministic_diff_requests_total`
 
+## Recruiter Quick Start
+
+- [recruiter_quick_start.md](docs/recruiter_quick_start.md)
+
 ## Architecture
 
 Architecture material is intentionally kept in-repo (public-safe):
@@ -101,6 +123,8 @@ Architecture material is intentionally kept in-repo (public-safe):
 - [operator_runbook.md](docs/operator_runbook.md)
 - [releases.md](docs/releases.md)
 - [repository_map.md](docs/repository_map.md)
+- [screenshots.md](docs/screenshots.md)
+- [system_topology.md](docs/system_topology.md)
 
 ## Public Replay Platform
 

@@ -10,7 +10,7 @@ If you believe you have found a security vulnerability, please do not open a pub
 
 Send a report to:
 
-- `security@example.invalid`
+- `security@<replace-this-domain>`
 
 Include:
 
