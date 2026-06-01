@@ -118,6 +118,7 @@ This repository is designed to be evaluated with screenshots and public verifica
 - API evidence: Swagger UI (`/docs`) + live calls for replay creation and lineage lookup
 - Observability evidence: Prometheus metrics (`/metrics`) + Grafana dashboard panels rendering
 - Screenshot plan: [screenshots.md](docs/screenshots.md)
+- Evidence index (screenshots + captions): [EVIDENCE_INDEX.md](EVIDENCE_INDEX.md)
 - Grafana guide: [grafana_live.md](docs/grafana_live.md)
 
 ## Recruiter Quick Start
