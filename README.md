@@ -10,6 +10,7 @@ Public-safe FastAPI backend that exposes deterministic validation + artifact dif
 - [Overview](#overview)
 - [Live Verification](#live-verification)
 - [Quick Verification Walkthrough (2–3 minutes)](#quick-verification-walkthrough-23-minutes)
+- [Evidence](#evidence)
 - [Recruiter Quick Start](#recruiter-quick-start)
 - [Architecture](#architecture)
 - [Public Replay Platform](#public-replay-platform)
@@ -107,6 +108,17 @@ Step 4: Verify metrics
   - `api_request_duration_seconds`
   - `replay_validation_requests_total`
   - `deterministic_diff_requests_total`
+
+## Evidence
+
+This repository is designed to be evaluated with screenshots and public verification links.
+
+- Release evidence: GitHub Releases → `v0.2.0`
+- Deployment evidence: Railway service overview (healthy)
+- API evidence: Swagger UI (`/docs`) + live calls for replay creation and lineage lookup
+- Observability evidence: Prometheus metrics (`/metrics`) + Grafana dashboard panels rendering
+- Screenshot plan: [screenshots.md](docs/screenshots.md)
+- Grafana guide: [grafana_live.md](docs/grafana_live.md)
 
 ## Recruiter Quick Start
 

@@ -7,7 +7,7 @@ This runbook focuses on verifiable checks you can perform against a running depl
 Set a base URL for commands below:
 
 - Local: `http://localhost:8000`
-- Deployed: `https://<your-public-service-domain>`
+- Deployed: `https://<railway-public-domain>`
 
 ## Deployment Verification
 
@@ -89,4 +89,3 @@ Expected:
 
 - `/docs` returns HTML
 - `/openapi.json` returns JSON and includes `info.title`
-
